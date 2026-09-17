@@ -32,10 +32,11 @@ export function CallbackForm({ title, options, value, setValue, onSaved, editing
   return (
     <FormShell title={title} error={error}>
       <BaseFields value={value} setValue={setValue} states={options.callbackStates} />
-      <div className="datetime-pair">
-        <label>
+      <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+        <label className="grid gap-1.5 font-bold">
           Fecha de recontacto
           <input
+            className="min-h-[42px] w-full min-w-0 rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-[#182033] outline-blue-600"
             type="date"
             value={recontact.date}
             onChange={(event) =>
@@ -44,9 +45,10 @@ export function CallbackForm({ title, options, value, setValue, onSaved, editing
             required
           />
         </label>
-        <label>
+        <label className="grid gap-1.5 font-bold">
           Hora
           <select
+            className="min-h-[42px] w-full min-w-0 rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-[#182033] outline-blue-600"
             value={recontact.time}
             onChange={(event) =>
               setValue({ ...value, recontactAt: combineRecontactAt(recontact.date, event.target.value) })
@@ -61,8 +63,12 @@ export function CallbackForm({ title, options, value, setValue, onSaved, editing
           </select>
         </label>
       </div>
-      <div className="actions">
-        <button className="primary" onClick={submit} disabled={saving}>
+      <div className="mt-5 flex flex-col justify-end gap-2.5 md:flex-row">
+        <button
+          className="inline-flex min-h-[42px] cursor-pointer items-center justify-center gap-2 rounded-lg border-0 bg-blue-600 px-3.5 py-2.5 font-bold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+          onClick={submit}
+          disabled={saving}
+        >
           <Check size={18} /> Guardar rellamado
         </button>
       </div>

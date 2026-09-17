@@ -9,7 +9,7 @@ export function PieBlock({ data }) {
   if (filtered.length === 0) return <Empty text="Todavia no hay datos para graficar." />;
 
   return (
-    <div className="chart">
+    <div className="rounded-lg border border-slate-200 bg-white p-3 md:p-3.5">
       <ResponsiveContainer width="100%" height={260}>
         <PieChart>
           <Pie data={filtered} dataKey="total" nameKey="state" outerRadius={95} label>

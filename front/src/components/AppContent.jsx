@@ -25,7 +25,7 @@ export function AppContent({
   const view = route.name;
 
   return (
-    <section className="content">
+    <section className="min-w-0 w-full max-w-none p-4 sm:p-5 md:max-w-[1280px] md:p-8">
       {view === 'home' && (
         <Home
           onRegister={onRegisterCall}

@@ -46,7 +46,7 @@ export function App() {
   }
 
   return (
-    <main className="app">
+    <main className="grid min-h-screen w-full grid-cols-1 bg-[#f5f7fb] text-[#182033] md:grid-cols-[260px_minmax(0,1fr)]">
       <AppSidebar view={route.name} onNavigate={(name) => setRoute({ name })} onRegisterCall={goRegisterCall} />
       <AppContent
         route={route}
@@ -56,6 +56,7 @@ export function App() {
         onEditCall={goEditCall}
         onEditCallback={goEditCallback}
         onFormDone={goHome}
+        
       />
     </main>
   );

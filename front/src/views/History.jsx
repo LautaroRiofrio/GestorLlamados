@@ -48,38 +48,42 @@ export function History({ onEditCall, onEditCallback }) {
 
   return (
     <>
-      <header className="topbar">
+      <header className="mb-5 flex min-w-0 flex-col items-stretch gap-4 md:mb-6 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1>Historial</h1>
-          <p>Llamados y rellamados ordenados por fecha de creacion.</p>
+          <h1 className="text-[26px] font-bold leading-tight md:text-[32px]">Historial</h1>
+          <p className="mt-1.5 text-sm text-slate-500 md:text-base">Llamados y rellamados ordenados por fecha de creacion.</p>
         </div>
       </header>
 
-      <div className="search">
+      <div className="flex min-h-[46px] min-w-0 items-center gap-2.5 rounded-lg border border-slate-200 bg-white px-3.5 py-2 sm:h-12 sm:py-0">
         <Search size={18} />
         <input
+          className="w-full min-w-0 border-0 bg-transparent outline-0"
           value={search}
           onChange={(event) => setSearch(event.target.value)}
           placeholder="Buscar por telefono, DNI, cuenta o estado"
         />
       </div>
 
-      <section className="history-grid">
+      <section className="mt-5 grid min-w-0 gap-4">
         <div>
           <SectionTitle title="Llamados" />
-          <div className="list">
+          <div className="grid gap-2.5">
             {sortedCalls.length === 0 && <Empty text="No hay llamados en el historial." />}
             {sortedCalls.map((call) => (
-              <div className="row history-row" key={call.id}>
-                <div>
+              <div
+                className="grid min-w-0 grid-cols-1 items-center gap-2.5 rounded-lg border border-slate-200 bg-white p-3.5 text-left transition hover:border-blue-600 sm:grid-cols-[1fr_auto] md:grid-cols-[1fr_1fr_1fr_auto] md:gap-3.5"
+                key={call.id}
+              >
+                <div className="grid min-w-0 gap-1">
                   <strong>{call.phone}</strong>
-                  <span>Creado: {formatDateTime(call.createdAt)}</span>
+                  <span className="[overflow-wrap:anywhere] text-sm text-slate-500">Creado: {formatDateTime(call.createdAt)}</span>
                 </div>
-                <div>
-                  <span>{call.dni || 'Sin DNI'}</span>
-                  <span>{call.accountNumber || 'Sin cuenta'}</span>
+                <div className="grid min-w-0 gap-1 sm:col-span-2 md:col-span-1">
+                  <span className="[overflow-wrap:anywhere] text-sm text-slate-500">{call.dni || 'Sin DNI'}</span>
+                  <span className="[overflow-wrap:anywhere] text-sm text-slate-500">{call.accountNumber || 'Sin cuenta'}</span>
                 </div>
-                <div>
+                <div className="grid min-w-0 gap-1 sm:col-span-2 md:col-span-1">
                   <strong>{call.state}</strong>
                   {/* <span>{call.detail || 'Sin detalle'}</span> */}
                 </div>
@@ -94,21 +98,24 @@ export function History({ onEditCall, onEditCallback }) {
 
         <div>
           <SectionTitle title="Rellamados" />
-          <div className="list">
+          <div className="grid gap-2.5">
             {sortedCallbacks.length === 0 && <Empty text="No hay rellamados en el historial." />}
             {sortedCallbacks.map((callback) => (
-              <div className="row history-row" key={callback.id}>
-                <div>
+              <div
+                className="grid min-w-0 grid-cols-1 items-center gap-2.5 rounded-lg border border-slate-200 bg-white p-3.5 text-left transition hover:border-blue-600 sm:grid-cols-[1fr_auto] md:grid-cols-[1fr_1fr_1fr_auto] md:gap-3.5"
+                key={callback.id}
+              >
+                <div className="grid min-w-0 gap-1">
                   <strong>{callback.phone}</strong>
-                  <span>Creado: {formatDateTime(callback.createdAt)}</span>
+                  <span className="[overflow-wrap:anywhere] text-sm text-slate-500">Creado: {formatDateTime(callback.createdAt)}</span>
                 </div>
-                <div>
-                  <span>{callback.dni || 'Sin DNI'}</span>
-                  <span>{callback.accountNumber || 'Sin cuenta'}</span>
+                <div className="grid min-w-0 gap-1 sm:col-span-2 md:col-span-1">
+                  <span className="[overflow-wrap:anywhere] text-sm text-slate-500">{callback.dni || 'Sin DNI'}</span>
+                  <span className="[overflow-wrap:anywhere] text-sm text-slate-500">{callback.accountNumber || 'Sin cuenta'}</span>
                 </div>
-                <div>
+                <div className="grid min-w-0 gap-1 sm:col-span-2 md:col-span-1">
                   <strong>{callback.state}</strong>
-                  <span>Recontacto: {formatDateTime(callback.recontactAt)}</span>
+                  <span className="[overflow-wrap:anywhere] text-sm text-slate-500">Recontacto: {formatDateTime(callback.recontactAt)}</span>
                 </div>
                 <RowActions
                   onEdit={() => onEditCallback(callback)}
