@@ -1,9 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { api } from '../api';
 import { MetricSummary } from '../components/MetricSummary';
 import { PieBlock } from '../components/PieBlock';
 import { SectionTitle } from '../components/SectionTitle';
 
-export function Metrics({ metrics, calls }) {
+export function Metrics() {
+  const [metrics, setMetrics] = useState(null);
+  const [calls, setCalls] = useState([]);
+
+  useEffect(() => {
+    async function loadData() {
+      const [nextMetrics, nextCallsPage] = await Promise.all([api.metrics(), api.calls()]);
+      setMetrics(nextMetrics);
+      setCalls(nextCallsPage.items || []);
+    }
+
+    loadData().catch(console.error);
+  }, []);
+
   return (
     <>
       <header className="topbar">
