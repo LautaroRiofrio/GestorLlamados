@@ -1,0 +1,10 @@
+node_modules/
+api/node_modules/
+front/node_modules/
+
+.env
+api/.env
+front/.env
+
+api/data/
+*.log
