@@ -1,5 +1,5 @@
 import React from 'react';
-import { BarChart3, CalendarClock, Phone, Plus } from 'lucide-react';
+import { BarChart3, CalendarClock, History, Phone, Plus } from 'lucide-react';
 
 export function AppSidebar({ view, onNavigate, onRegisterCall }) {
   return (
@@ -13,6 +13,9 @@ export function AppSidebar({ view, onNavigate, onRegisterCall }) {
       </button>
       <button className={view === 'metrics' ? 'nav active' : 'nav'} onClick={() => onNavigate('metrics')}>
         <BarChart3 size={18} /> Metricas
+      </button>
+      <button className={view === 'history' ? 'nav active' : 'nav'} onClick={() => onNavigate('history')}>
+        <History size={18} /> Historial
       </button>
       <button className="primary" onClick={onRegisterCall}>
         <Plus size={18} /> Registrar llamado

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { CallbackForm } from './CallbackForm';
 import { CallForm } from './CallForm';
+import { History } from '../views/History';
 import { Home } from '../views/Home';
 import { Metrics } from '../views/Metrics';
 
@@ -33,6 +34,12 @@ export function AppContent({
         />
       )}
       {view === 'metrics' && <Metrics />}
+      {view === 'history' && (
+        <History
+          onEditCall={onEditCall}
+          onEditCallback={onEditCallback}
+        />
+      )}
       {view === 'call' && <RegisterCallView options={options} onSaved={onFormDone} onRegisterCallback={onRegisterCallback} />}
       {view === 'editCall' && <EditCallView call={route.call} options={options} onSaved={onFormDone} />}
       {view === 'callback' && <CallbackView callback={route.callback} options={options} onSaved={onFormDone} />}

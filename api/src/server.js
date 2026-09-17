@@ -167,7 +167,8 @@ function callbackFiltersFromQuery(query) {
     pending: query.pending === 'true',
     sourceCallId: normalizeText(query.sourceCallId),
     recontactFrom: normalizeText(query.recontactFrom),
-    recontactTo: normalizeText(query.recontactTo)
+    recontactTo: normalizeText(query.recontactTo),
+    sort: normalizeText(query.sort)
   };
 }
 

@@ -149,7 +149,8 @@ export async function deleteCall(id) {
 
 export async function listCallbacks(filters = {}, pagination = {}) {
   const callbacks = await collection('callbacks');
-  return paginatedFind(callbacks, callbackFilter(filters), { recontactAt: 1 }, pagination);
+  const sort = filters.sort === 'createdAt' ? { createdAt: -1 } : { recontactAt: 1 };
+  return paginatedFind(callbacks, callbackFilter(filters), sort, pagination);
 }
 
 export async function listAllCallbacks() {

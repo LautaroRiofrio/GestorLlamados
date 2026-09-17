@@ -188,6 +188,13 @@ p {
   min-width: 0;
 }
 
+.history-grid {
+  display: grid;
+  gap: 18px;
+  margin-top: 22px;
+  min-width: 0;
+}
+
 .list {
   display: grid;
   gap: 10px;
@@ -205,6 +212,10 @@ p {
   align-items: center;
   text-align: left;
   min-width: 0;
+}
+
+.history-row {
+  grid-template-columns: 1fr 1fr 1fr auto;
 }
 
 .row:hover {
@@ -452,7 +463,15 @@ textarea {
     grid-template-columns: 1fr auto;
   }
 
+  .history-row {
+    grid-template-columns: 1fr auto;
+  }
+
   .row div:nth-child(2) {
+    grid-column: 1 / -1;
+  }
+
+  .history-row div:nth-child(3) {
     grid-column: 1 / -1;
   }
 
@@ -533,7 +552,15 @@ textarea {
     gap: 10px;
   }
 
+  .history-row {
+    grid-template-columns: 1fr;
+  }
+
   .row div:nth-child(2) {
+    grid-column: auto;
+  }
+
+  .history-row div:nth-child(3) {
     grid-column: auto;
   }
 
