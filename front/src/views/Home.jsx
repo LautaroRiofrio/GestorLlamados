@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Plus, Search } from 'lucide-react';
+import { api } from '../api';
 import { Empty } from '../components/Empty';
 import { MetricSummary } from '../components/MetricSummary';
 import { PieBlock } from '../components/PieBlock';
@@ -8,17 +9,44 @@ import { SectionTitle } from '../components/SectionTitle';
 import { formatDateTime } from '../utils/date';
 
 export function Home({
-  callbacks,
-  calls,
-  metrics,
-  search,
-  setSearch,
   onRegister,
   onEditCall,
-  onDeleteCall,
-  onEditCallback,
-  onDeleteCallback
+  onEditCallback
 }) {
+  const [search, setSearch] = useState('');
+  const [callbacks, setCallbacks] = useState([]);
+  const [calls, setCalls] = useState([]);
+  const [metrics, setMetrics] = useState(null);
+
+  async function loadData() {
+    const [nextCallbacksPage, nextCallsPage, nextMetrics] = await Promise.all([
+      api.callbacks({ pending: true, q: search }),
+      api.calls({ q: search }),
+      api.metrics()
+    ]);
+    setCallbacks(nextCallbacksPage.items || []);
+    setCalls(nextCallsPage.items || []);
+    setMetrics(nextMetrics);
+  }
+
+  useEffect(() => {
+    loadData().catch(console.error);
+  }, [search]);
+
+  async function deleteCall(call) {
+    const confirmed = window.confirm(`¿Eliminar el llamado de ${call.phone}?`);
+    if (!confirmed) return;
+    await api.deleteCall(call.id);
+    await loadData();
+  }
+
+  async function deleteCallback(callback) {
+    const confirmed = window.confirm(`¿Eliminar el rellamado de ${callback.phone}?`);
+    if (!confirmed) return;
+    await api.deleteCallback(callback.id);
+    await loadData();
+  }
+
   return (
     <>
       <header className="topbar">
@@ -59,7 +87,7 @@ export function Home({
                 </div>
                 <RowActions
                   onEdit={() => onEditCallback(callback)}
-                  onDelete={() => onDeleteCallback(callback)}
+                  onDelete={() => deleteCallback(callback)}
                 />
               </div>
             ))}
@@ -79,7 +107,7 @@ export function Home({
                 <strong>{call.state}</strong>
                 <RowActions
                   onEdit={() => onEditCall(call)}
-                  onDelete={() => onDeleteCall(call)}
+                  onDelete={() => deleteCall(call)}
                 />
               </div>
             ))}
