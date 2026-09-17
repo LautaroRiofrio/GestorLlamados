@@ -1,6 +1,9 @@
 import cors from 'cors';
 import './config.js';
 import express from 'express';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { apiRoutes } from './apiRoutes.js';
 import { checkMongoConnection, hasMongoConfig } from './mongo.js';
 import {
   createCall,
@@ -18,6 +21,9 @@ import {
 
 const app = express();
 const port = process.env.PORT || 4000;
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const frontDistPath = path.resolve(__dirname, '../../front/dist');
+const frontIndexPath = path.join(frontDistPath, 'index.html');
 
 const callStates = [
   'no venta',
@@ -40,6 +46,7 @@ const callbackStates = [
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static(frontDistPath));
 
 function normalizeText(value) {
   return typeof value === 'string' ? value.trim() : '';
@@ -164,11 +171,11 @@ function callbackFiltersFromQuery(query) {
   };
 }
 
-app.get('/api/options', (_req, res) => {
+app.get(apiRoutes.options, (_req, res) => {
   res.json({ callStates, callbackStates });
 });
 
-app.get('/api/health/mongo', asyncHandler(async (_req, res) => {
+app.get(apiRoutes.mongoHealth, asyncHandler(async (_req, res) => {
   if (!hasMongoConfig()) {
     return res.status(503).json({
       connected: false,
@@ -188,17 +195,17 @@ app.get('/api/health/mongo', asyncHandler(async (_req, res) => {
   }
 }));
 
-app.get('/api/calls', asyncHandler(async (req, res) => {
+app.get(apiRoutes.calls, asyncHandler(async (req, res) => {
   res.json(await listCalls(callFiltersFromQuery(req.query), paginationFromQuery(req.query)));
 }));
 
-app.get('/api/calls/:id', asyncHandler(async (req, res) => {
+app.get(apiRoutes.call, asyncHandler(async (req, res) => {
   const call = await getCall(req.params.id);
   if (!call) return res.status(404).json({ message: 'Llamado no encontrado.' });
   res.json(call);
 }));
 
-app.post('/api/calls', asyncHandler(async (req, res) => {
+app.post(apiRoutes.calls, asyncHandler(async (req, res) => {
   const { errors, data: callData } = validateCall(req.body);
   if (sendValidationErrors(res, errors)) return;
 
@@ -206,7 +213,7 @@ app.post('/api/calls', asyncHandler(async (req, res) => {
   res.status(201).json(call);
 }));
 
-app.put('/api/calls/:id', asyncHandler(async (req, res) => {
+app.put(apiRoutes.call, asyncHandler(async (req, res) => {
   const { errors, data: callData } = validateCall(req.body);
   if (sendValidationErrors(res, errors)) return;
 
@@ -215,23 +222,23 @@ app.put('/api/calls/:id', asyncHandler(async (req, res) => {
   res.json(call);
 }));
 
-app.delete('/api/calls/:id', asyncHandler(async (req, res) => {
+app.delete(apiRoutes.call, asyncHandler(async (req, res) => {
   const deleted = await deleteCall(req.params.id);
   if (!deleted) return res.status(404).json({ message: 'Llamado no encontrado.' });
   res.status(204).end();
 }));
 
-app.get('/api/callbacks', asyncHandler(async (req, res) => {
+app.get(apiRoutes.callbacks, asyncHandler(async (req, res) => {
   res.json(await listCallbacks(callbackFiltersFromQuery(req.query), paginationFromQuery(req.query)));
 }));
 
-app.get('/api/callbacks/:id', asyncHandler(async (req, res) => {
+app.get(apiRoutes.callback, asyncHandler(async (req, res) => {
   const callback = await getCallback(req.params.id);
   if (!callback) return res.status(404).json({ message: 'Rellamado no encontrado.' });
   res.json(callback);
 }));
 
-app.post('/api/callbacks', asyncHandler(async (req, res) => {
+app.post(apiRoutes.callbacks, asyncHandler(async (req, res) => {
   const { errors, data: callbackData } = validateCallback(req.body);
   if (sendValidationErrors(res, errors)) return;
 
@@ -239,7 +246,7 @@ app.post('/api/callbacks', asyncHandler(async (req, res) => {
   res.status(201).json(callback);
 }));
 
-app.put('/api/callbacks/:id', asyncHandler(async (req, res) => {
+app.put(apiRoutes.callback, asyncHandler(async (req, res) => {
   const { errors, data: callbackData } = validateCallback(req.body);
   if (sendValidationErrors(res, errors)) return;
 
@@ -248,13 +255,13 @@ app.put('/api/callbacks/:id', asyncHandler(async (req, res) => {
   res.json(callback);
 }));
 
-app.delete('/api/callbacks/:id', asyncHandler(async (req, res) => {
+app.delete(apiRoutes.callback, asyncHandler(async (req, res) => {
   const deleted = await deleteCallback(req.params.id);
   if (!deleted) return res.status(404).json({ message: 'Rellamado no encontrado.' });
   res.status(204).end();
 }));
 
-app.get('/api/metrics', asyncHandler(async (_req, res) => {
+app.get(apiRoutes.metrics, asyncHandler(async (_req, res) => {
   const data = await readRecordData();
   const now = new Date();
   const todayStart = startOfDay(now);
@@ -283,6 +290,13 @@ app.get('/api/metrics', asyncHandler(async (_req, res) => {
     }
   });
 }));
+
+app.get('*', (req, res, next) => {
+  if (req.path.startsWith('/api')) return next();
+  return res.sendFile(frontIndexPath, (error) => {
+    if (error) next(error);
+  });
+});
 
 app.use((error, _req, res, _next) => {
   console.error(error);
