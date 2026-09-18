@@ -308,6 +308,12 @@ app.get('*', (req, res, next) => {
 
 app.use((error, _req, res, _next) => {
   console.error(error);
+  if (error.message === 'Falta configurar MONGODB_URI.') {
+    return res.status(503).json({
+      message: 'Falta configurar MONGODB_URI en las variables de entorno del backend.'
+    });
+  }
+
   res.status(500).json({ message: 'Error interno del servidor.' });
 });
 
