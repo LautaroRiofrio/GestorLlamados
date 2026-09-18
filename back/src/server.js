@@ -46,7 +46,10 @@ const callbackStates = [
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(frontDistPath));
+
+if (process.env.VERCEL !== '1') {
+  app.use(express.static(frontDistPath));
+}
 
 function normalizeText(value) {
   return typeof value === 'string' ? value.trim() : '';
@@ -294,6 +297,10 @@ app.get(apiRoutes.metrics, asyncHandler(async (_req, res) => {
 
 app.get('*', (req, res, next) => {
   if (req.path.startsWith('/api')) return next();
+  if (process.env.VERCEL === '1') {
+    return res.json({ message: 'Gestor llamados API' });
+  }
+
   return res.sendFile(frontIndexPath, (error) => {
     if (error) next(error);
   });

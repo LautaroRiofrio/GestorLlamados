@@ -1,10 +1,10 @@
 node_modules/
-api/node_modules/
+back/node_modules/
 front/node_modules/
 
 .env
-api/.env
+back/.env
 front/.env
 
-api/data/
+back/data/
 *.log
