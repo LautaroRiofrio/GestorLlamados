@@ -67,15 +67,15 @@ export function History({ onEditCall, onEditCallback }) {
 
       <section className="mt-5 grid min-w-0 gap-4">
         <div>
-          <SectionTitle title="Llamados" />
+          <SectionTitle title="Llamados"/>
           <div className="grid gap-2.5">
             {sortedCalls.length === 0 && <Empty text="No hay llamados en el historial." />}
             {sortedCalls.map((call) => (
               <div
-                className="grid min-w-0 grid-cols-1 items-center gap-2.5 rounded-lg border border-slate-200 bg-white p-3.5 text-left transition hover:border-blue-600 sm:grid-cols-[1fr_auto] md:grid-cols-[1fr_1fr_1fr_auto] md:gap-3.5"
+                className=" grid min-w-0 grid-cols-1 items-center gap-2.5 rounded-lg border border-slate-200 bg-white p-3.5 text-left transition hover:border-blue-600 sm:grid-cols-[1fr_auto] md:grid-cols-[1fr_1fr_1fr_auto] md:gap-3.5 "
                 key={call.id}
               >
-                <div className="grid min-w-0 gap-1">
+                <div className="grid min-w-0 gap-1 ">
                   <strong>{call.phone}</strong>
                   <span className="[overflow-wrap:anywhere] text-sm text-slate-500">Creado: {formatDateTime(call.createdAt)}</span>
                 </div>
