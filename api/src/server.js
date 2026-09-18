@@ -304,6 +304,10 @@ app.use((error, _req, res, _next) => {
   res.status(500).json({ message: 'Error interno del servidor.' });
 });
 
-app.listen(port, () => {
-  console.log(`API lista en http://localhost:${port}`);
-});
+export default app;
+
+if (process.env.VERCEL !== '1') {
+  app.listen(port, () => {
+    console.log(`API lista en http://localhost:${port}`);
+  });
+}
